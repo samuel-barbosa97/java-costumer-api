@@ -2,6 +2,9 @@
 
 Este é um projeto de aplicativo de gerenciamento de clientes (Costumers) desenvolvido em Java usando o framework Spring Boot e MongoDB para armazenamento de dados.
 
+[![Java CI with Gradle](https://github.com/samuel-barbosa97/java-costumer-api/actions/workflows/gradle.yml/badge.svg)](https://github.com/samuel-barbosa97/java-costumer-api/actions/workflows/gradle.yml)
+
+
 ## Funcionalidades
 
 1. **Criação de Costumer:**
