@@ -14,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 
 @RestController
@@ -96,6 +97,38 @@ public class CostumerController {
         } catch (Exception e) {
             logger.error("Erro ao processar a solicitação de atualização de costumer. ID: {}", id, e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Costumer> deleteById(@PathVariable("id") String id) {
+        try {
+            logger.info("Recebendo solicitação para excluir costumer com ID: {}", id);
+
+            validateId(id);
+
+            Optional<Costumer> costumerToDelete = costumerService.findById(id);
+
+            if (costumerToDelete.isPresent()) {
+                costumerService.deleteById(id);
+                logger.info("Exclusão de costumer bem-sucedido. ID: {}, Nome: {}", costumerToDelete.get().getId(), costumerToDelete.get().getNome());
+                return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+            } else {
+                logger.warn("Tentativa de excluir um Costumer que não existe. ID: {}", id);
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            }
+        } catch (IllegalArgumentException e) {
+            logger.warn("ID inválido fornecido para exclusão de Costumer. ID: {}", id);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        } catch (Exception e) {
+            logger.error("Erro ao processar solicitação de exclusão de costumer. ID: {}", id, e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    private void validateId(String id) {
+        if (id == null || id.trim().isEmpty()) {
+            throw new IllegalArgumentException("ID não pode ser nulo ou vazio");
         }
     }
 
