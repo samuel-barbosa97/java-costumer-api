@@ -33,14 +33,23 @@ public class CostumerService {
         }
     }
 
-    public Costumer updateCostumer(UpdateCostumer updateCostumer, String id) throws Exception {
+    public Costumer updateCostumer(UpdateCostumer updateCostumer, String id) throws ChangeSetPersister.NotFoundException {
+        validateUpdateCostumer(updateCostumer);
+
         Costumer costumerToBeUpdate = costumerRepository.findById(id)
-                .orElseThrow(() -> new Exception("O ID não existe no banco de dados"));
+                .orElseThrow(ChangeSetPersister.NotFoundException::new);
+
         costumerToBeUpdate.setNome(updateCostumer.getNome());
         costumerToBeUpdate.setEndereco(updateCostumer.getEndereco());
         costumerToBeUpdate.setEmail(updateCostumer.getEmail());
         costumerToBeUpdate.setTelefone(updateCostumer.getTelefone());
-        return costumerRepository.save(costumerToBeUpdate);
 
+        return costumerRepository.save(costumerToBeUpdate);
+    }
+
+    private void validateUpdateCostumer(UpdateCostumer updateCostumer) {
+        if (updateCostumer == null) {
+            throw new IllegalArgumentException("Dados de atualização não podem ser nulos");
+        }
     }
 }
