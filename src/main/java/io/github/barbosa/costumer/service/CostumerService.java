@@ -1,6 +1,5 @@
 package io.github.barbosa.costumer.service;
 
-import io.github.barbosa.costumer.controller.CostumerController;
 import io.github.barbosa.costumer.model.Costumer;
 import io.github.barbosa.costumer.model.UpdateCostumer;
 import io.github.barbosa.costumer.repository.CostumerRepository;
@@ -62,7 +61,7 @@ public class CostumerService {
         validateId(id);
         try {
             Costumer costumerToDelete = costumerRepository.findById(id)
-                    .orElseThrow(() -> new ChangeSetPersister.NotFoundException());
+                    .orElseThrow(ChangeSetPersister.NotFoundException::new);
             costumerRepository.deleteById(id);
             logger.info("Costumer excluído com sucesso. ID: {}, Nome: {}", costumerToDelete.getId(), costumerToDelete.getNome());
         } catch (ChangeSetPersister.NotFoundException e) {
